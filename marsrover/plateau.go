@@ -5,7 +5,7 @@ type MaxGridPlanet struct {
 	YMax int `json:"YMax"`
 }
 
-var maxGrid MaxGridPlanet
+var _ MaxGridPlanet
 
 func (max *MaxGridPlanet) isLesser(pos *Rover) bool {
 	return (pos.XPosition <= max.XMax) && (pos.YPosition <= max.YMax)

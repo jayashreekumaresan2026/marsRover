@@ -35,10 +35,11 @@ func main(){
 		if err != nil {
 			sendErrorResponse(c, err)
 		}
-		    rover.MaxGridPlanet = roverRequest.MaxGridPlanet
+
 			rover.XPosition =roverRequest.XPosition
 		    rover.YPosition =roverRequest.YPosition
-		    rover.Direction =roverRequest.Direction
+		    rover.Direction =getDirection(roverRequest.Direction)
+		    rover.MaxGridPlanet = roverRequest.MaxGridPlanet
 		 sendSuccessResponse(c, "Rover successfully initialised")
 	})
 	router.POST("/rover/instructions", func(c *gin.Context) {
@@ -95,3 +96,19 @@ func sendSuccessResponse(c *gin.Context, result string) {
 		"roverPosition": result,
 	})
 }
+func getDirection(s string) Direction {
+	switch s {
+	case "N":
+		return Enum.N
+	case "S":
+		return Enum.S
+	case "E":
+		return Enum.E
+	case "W":
+		return Enum.W
+	}
+	return nil
+}
+
+
+
