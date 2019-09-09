@@ -4,13 +4,13 @@ type East struct {
 }
 
 func (East) rightMove() Direction {
-	return Enum.N
-}
-func (East) leftMove() Direction {
 	return Enum.S
 }
-func (East) moveForward(pos Rover) (int, int) {
-	return pos.XPosition + 1, pos.YPosition
+func (East) leftMove() Direction {
+	return Enum.N
+}
+func (East) moveForward(coordinate Coordinates) Coordinates {
+	return Coordinates{XPosition:coordinate.XPosition+1,YPosition:coordinate.YPosition}
 }
 func (East) toString() string {
 	return "East"

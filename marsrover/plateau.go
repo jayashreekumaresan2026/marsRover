@@ -7,7 +7,7 @@ type MaxGridPlanet struct {
 
 var _ MaxGridPlanet
 
-func (max *MaxGridPlanet) isLesser(pos *Rover) bool {
-	return (pos.XPosition <= max.XMax) && (pos.YPosition <= max.YMax)
+func (max *MaxGridPlanet) isLesser(coordinates Coordinates) bool {
+	return (coordinates.XPosition <= max.XMax) && (coordinates.YPosition <= max.YMax)
 }
 

@@ -2,24 +2,25 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
 )
 
 type roverRequest struct {
-	XPosition int `json:"xPosition"`
-	YPosition int `json:"yPosition"`
-	Direction string `json:"direction"`
+	Coordinates   Coordinates   `json:"coordinates"`
+	Direction     string        `json:"direction"`
 	MaxGridPlanet MaxGridPlanet `json:"maxGridPlanets"`
 }
 type roverCommandRequest struct {
 	Instructions string `json:"instruction"`
 }
+
 var rover Rover
 
-func main(){
-	router :=gin.Default()
+func main() {
+	router := gin.Default()
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
@@ -36,16 +37,15 @@ func main(){
 			sendErrorResponse(c, err)
 		}
 
-			rover.XPosition =roverRequest.XPosition
-		    rover.YPosition =roverRequest.YPosition
-		    rover.Direction =getDirection(roverRequest.Direction)
-		    rover.MaxGridPlanet = roverRequest.MaxGridPlanet
-		 sendSuccessResponse(c, "Rover successfully initialised")
+		rover.Coordinates = roverRequest.Coordinates
+		rover.Direction = getDirection(roverRequest.Direction)
+		rover.MaxGridPlanet = roverRequest.MaxGridPlanet
+		sendSuccessResponse(c, "Rover successfully initialised")
 	})
 	router.POST("/rover/instructions", func(c *gin.Context) {
 		body, err := ioutil.ReadAll(c.Request.Body)
 		if err != nil {
-			sendErrorResponse(c,err)
+			sendErrorResponse(c, err)
 		}
 		var instructions roverCommandRequest
 		err = json.Unmarshal(body, &instructions)
@@ -78,6 +78,7 @@ func main(){
 	router.Run()
 }
 func unitInstructionHandler(c *gin.Context, instruction string) {
+	fmt.Println(instruction)
 	position, err := rover.start(instruction)
 	if err != nil {
 		sendErrorResponse(c, err)
@@ -109,6 +110,3 @@ func getDirection(s string) Direction {
 	}
 	return nil
 }
-
-
-

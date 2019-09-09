@@ -8,8 +8,8 @@ func (West) rightMove() Direction {
 func (West) leftMove() Direction {
 	return Enum.S
 }
-func (West) moveForward(pos Rover) (int, int) {
-	return pos.XPosition - 1, pos.YPosition
+func (West) moveForward(coordinate Coordinates) Coordinates {
+	return Coordinates{XPosition:coordinate.XPosition-1,YPosition:coordinate.YPosition}
 }
 func (West) toString() string {
 	return "West"

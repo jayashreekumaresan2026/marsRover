@@ -2,7 +2,7 @@ package main
 type Direction interface {
 	leftMove() Direction
 	rightMove() Direction
-	moveForward(pos Rover) (int,int)
+	moveForward(coordinate Coordinates) Coordinates
 	toString() string
 }
 type direction struct {
