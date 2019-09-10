@@ -1,7 +1,7 @@
 package main
 
 func (Rover) start(command string) (string, error) {
-	pos := createRover()
+	pos := CreateRover()
 	for i := 0; i < len(command); i++ {
 		switch command[i] {
 		case 'L':

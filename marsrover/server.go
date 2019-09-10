@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
@@ -21,11 +20,6 @@ var rover Rover
 
 func main() {
 	router := gin.Default()
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
 	router.POST("/rover", func(c *gin.Context) {
 		body, err := ioutil.ReadAll(c.Request.Body)
 		if err != nil {
@@ -59,26 +53,43 @@ func main() {
 			sendSuccessResponse(c, position)
 		}
 	})
-	router.GET("/rover/left", func(c *gin.Context) {
-		unitInstructionHandler(c, "L")
-	})
 
-	router.GET("/rover/right", func(c *gin.Context) {
-		unitInstructionHandler(c, "R")
-	})
+	v1 := router.Group("/rover")
+	{
+		v1.GET("/left", func(c *gin.Context) {
+			if rover.IsEmpty() {
+				sendSuccessResponse(c, "Initialize rover")
+			}else{
+				unitInstructionHandler(c, "L")
+			}
+		})
+		v1.GET("/right", func(c *gin.Context) {
+			if rover.IsEmpty() {
+				sendSuccessResponse(c, "Initialize rover")
+			}else{
+				unitInstructionHandler(c, "R")
+			}
+		})
 
-	router.GET("/rover/move", func(c *gin.Context) {
-		unitInstructionHandler(c, "M")
-	})
-
-	router.GET("/", func(c *gin.Context) {
-		sendSuccessResponse(c, rover.toString())
-	})
-
+		v1.GET("/move", func(c *gin.Context) {
+			if rover.IsEmpty() {
+				sendSuccessResponse(c, "Initialize rover")
+			}else{
+				unitInstructionHandler(c, "M")
+			}
+		})
+		v1.GET("/", func(c *gin.Context) {
+			if rover.IsEmpty() {
+				sendSuccessResponse(c, "Initialize rover")
+			}else {
+				sendSuccessResponse(c, rover.toString())
+			}
+		})
+	}
 	router.Run()
 }
+
 func unitInstructionHandler(c *gin.Context, instruction string) {
-	fmt.Println(instruction)
 	position, err := rover.start(instruction)
 	if err != nil {
 		sendErrorResponse(c, err)
@@ -97,6 +108,7 @@ func sendSuccessResponse(c *gin.Context, result string) {
 		"roverPosition": result,
 	})
 }
+
 func getDirection(s string) Direction {
 	switch s {
 	case "N":
@@ -110,3 +122,7 @@ func getDirection(s string) Direction {
 	}
 	return nil
 }
+func (s Rover) IsEmpty() bool {
+	return s.Equals(Rover{})
+}
+

@@ -5,6 +5,7 @@ type Direction interface {
 	moveForward(coordinate Coordinates) Coordinates
 	toString() string
 }
+
 type direction struct {
 	W Direction
 	E Direction
